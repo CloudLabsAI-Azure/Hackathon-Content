@@ -1,4 +1,6 @@
-# Solution Guide 1 Day
+# Solution Guide: 
+
+# 1 Day
 
 # Challenge 01: Continuous Integration and Deployment for Contoso Traders using GitHub Actions
 
