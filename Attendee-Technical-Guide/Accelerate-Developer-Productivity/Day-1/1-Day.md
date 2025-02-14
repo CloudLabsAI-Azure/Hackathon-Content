@@ -304,51 +304,51 @@ Deploy **llama-3.1-8b-instruct** NIM in one of the following places:
 
    - You will see a pop-up. On the **Set Email Preferences For Your Services** page, you can either close it or click **Set Email Preferences** to receive updates regarding security, announcements, and maintenance for all your services.
 
-      ![](../../Coach/media/nv8.png)
+      ![](../media/nv8.png)
 
    - In the search bar, look for **Llama-3.1-8b-instruct**.
 
-      ![](../../Coach/media/nv7.png)
+      ![](../media/nv7.png)
 
    - Scroll down and select **Llama-3.1-8b-instruct**. 
 
-      ![](../../Coach/media/nv6.png)
+      ![](../media/nv6.png)
 
    - On the left-hand side, click **Get Container**.
 
-      ![](../../Coach/media/nv5.png)
+      ![](../media/nv5.png)
 
    - A pop-up will appear on the **Approval Required** page. Click **Join** for the **NVIDIA Developer Program**, and it will redirect you to the NVIDIA Developer Portal.
 
-      ![](../../Coach/media/nv4.png)
+      ![](../media/nv4.png)
 
    - On the **NVIDIA Developer Portal**, under **Integrate NIM into your application**, provide the necessary details and click **Join**.
 
-      ![](../../Coach/media/nv3.png)
+      ![](../media/nv3.png)
 
    - Navigate back to your **NVIDIA Account**. From **Organization**, click **Subscriptions** on the left. Here, you will see the **Active** status for the NVIDIA Developer Program.
 
-      ![](../../Coach/media/nv2.png)
+      ![](../media/nv2.png)
 
    - Click on **Account** at the top of the page and navigate to the **Setup** section.
 
-      ![](../../Coach/media/nvidia4.png)
+      ![](../media/nvidia4.png)
 
    - Click on **Generate API Key** to create a new key for accessing the necessary services.
 
-      ![](../../Coach/media/nvidia5.png)
+      ![](../media/nvidia5.png)
 
    - From the top, click on **+ Generate API Key** to create a new API key.
 
-      ![](../../Coach/media/nvidia8.png)
+      ![](../media/nvidia8.png)
 
    - Click on **Confirm** to generate your new API key.
 
-      ![](../../Coach/media/nvidia9.png)
+      ![](../media/nvidia9.png)
 
    - Carefully copy your generated API key, essential for accessing various services and features paste the API key in the notebook. Ensure you store it securely, as it may not be displayed again after you leave the page.
 
-      ![](../../Coach/media/nvidia7.png)
+      ![](../media/nvidia7.png)
 
 1. **Deploy Container registries**
 
