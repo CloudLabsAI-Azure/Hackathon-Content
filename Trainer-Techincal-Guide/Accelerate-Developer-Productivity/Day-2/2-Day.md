@@ -1,6 +1,6 @@
 # Solution Guide: 
 
-# 1 Day
+# 1st Day
 
 # Challenge 01: Continuous Integration and Deployment for Contoso Traders using GitHub Actions
 
@@ -1183,3 +1183,1031 @@ To complete this challenge successfully:
 - Refer to [Application Insights Overview](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for reference.
 - [Application Insights for ASP.NET Core applications](https://learn.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core?tabs=netcorenew%2Cnetcore6).
 - Refer to [Azure Monitor vs. Application Insights](https://azurelib.com/azure-monitor-vs-application-insights/) for reference.
+
+
+# 2nd Day
+
+# Challenge 06: Resilience Testing using Azure Load Testing & Azure Chaos Studio
+
+## Introduction
+
+This challenge centers around Azure Load Testing and Azure Chaos Studio, empowering you to perform performance tests and enhance application resilience. In the modern digital landscape, guaranteeing optimal performance during heavy loads and fortifying against disruptions is essential. Through Azure's tools, you'll gain insights into proactive issue detection and methods to reinforce your applications.
+
+This is the solution guide that contains all of the comprehensive, step-by-step directions needed to finish the challenge.
+
+## Solution Guide
+
+## Task 1: Setting Up Azure Load Testing
+
+In this task, you'll create an Azure Load Testing instance and run a test using a JMeter file.
+
+1. In the Azure Portal, navigate to the **contoso-traders-rg<inject key="DeploymentID" enableCopy="false" /> (1)** resource group and select the **Endpoint** resource with the name  **contoso-traders-ui2<inject key="DeploymentID" /> (2)**.
+
+   ![](../media/ex5-task1-1.png)
+
+1. From the overview of the **contoso-traders-ui2<inject key="DeploymentID" enableCopy="false" />** endpoint, copy the **Endpoint hostname** and paste it into the notepad for later use in the task.
+
+   ![](../media/cl5-t1-s2.png)
+
+1. To create an Azure Load Testing service, within the global search bar of the Azure Portal, search for and select **Azure Load Testing**.
+
+   ![](../media/loadtesting.png)
+
+1. Click on **+ Create**.
+
+   ![](../media/createloadtesting.png)
+
+1. Within the **Basics** tab of the **Create a load testing resource**, enter the following details. Click on **Review + create**
+   
+   - **Subscription**: Select the available subscription provided **(1)**.
+   - **Resource group**: Select **contoso-traders-rg<inject key="DeploymentID" /> (2)**
+   - **Name**: Enter **contoso-traders-loadtest-<inject key="DeploymentID" /> (3)**
+   - **Region**: **East US (4)**
+   - Click on **Review + create (5)**
+   - Finally, click on **Create**.
+
+     ![](../media/ex5-task1-2.png)
+
+1. On the left-hand side pane, Expand **Tests** **(1)** then select **Tests** **(2)**, click on **+ Create** **(3)**, and select **Create a URL-based test (4)**.
+
+   ![](../media/ex5-task1-3.png)
+
+1. On the **Create a URL-based test** page, under the Basics tab, uncheck **Enable advanced settings** to reveal the Test URL setting.
+ Paste the **Endpoint URL** as **Test URL** **(1)**, leave the rest as default, and then click on **Review + create (2)**, followed by **Create**.
+
+   ![](../media/url-load-test-1.png)
+
+1. Once the test run starts, wait until it completes. When the test run finishes, the status will update to **Done**. At this point, you’ll be able to view the Client-side metrics. Explore the given metrics output.
+
+   ![](../media/ex5-task1-4.png)
+
+   ![](../media/ex5-task1-5.png) 
+   
+   **Note**: In case the test fails due to `The test was stopped due to a high error rate, check your script and try again. If the issue persists, raise a ticket with a support error. This is expected, as sometimes the load on the application exceeds the defined throughput.
+     
+## Task 2: Create an experiment and target using Azure Chaos studio
+
+In this task, your objective is to incorporate Targets and establish an Experiment within Azure Chaos Studio. This process aims to assess the resilience of the web application we developed by introducing real faults and observing how our applications react to real-world disruptions.
+
+1. In the Azure Portal, search for **Azure Chaos Studio (1)** and then click on it from the search results **(2)**.
+   
+   ![](../media/Ex6-T2-S1.1.png)
+
+1. In the **Azure Chaos Studio**, Expand **Experiment management (1)** on the left menu and select **Targets (2)**.
+
+   ![](../media/ex5-task2-1.png)
+      
+1. From the drop-down menu, select the **contoso-traders-rgXXXXXX** resource group.
+ 
+   ![](../media/ex5-task2-2.png)
+     
+1. Click on the **contoso-traders-aks<inject key="DeploymentID" enableCopy="false" />** **(1)** **Kubernetes service** instance, and from the drop-down for **Enable Targets** **(2)**, choose **Enable service-direct targets (All resources)** **(3)**.
+
+   ![](../media/2dgn99.png)
+     
+1. Click on **Review + Enable**.
+
+   ![](../media/reviewenable.png)
+
+1. Then click on **Enable** to Enable service-direct targets. 
+   
+   ![](../media/enable.png)
+
+1. Wait for the deployment to be completed.  
+
+1. In the Azure Portal search for **Azure Chaos Studio** ***(1)*** and then click on it from the search results ***(2)***.
+   
+   ![](../media/Ex6-T2-S1.1.png)
+    
+1. Once the target is enabled, select **Experiments** ***(1)*** on the left, click the **+ Create** ***(2)*** drop-down, and select **New experiment** **(3)** .
+ 
+   ![](../media/ex6-task3-step9.png)
+ 
+1. On the **Create an experiment** page, under the **Basics** tab, provide the following values and select **Next: Permissions >** ***(4)***.
+
+    - Subscription: Select the default subscription ***(1)***
+    - Resource Group: **contoso-traders-rgXXXXXX** **(2)**
+    - Name: **contoso-chaos-XXXXXX** ***(3)***
+    - Region: Leave it to default 
+ 
+      ![](../media/experiment.png)
+   
+1. On the **Permissions** page, leave the default selection and select **Next: Experiment designer >**.
+
+   ![](../media/E5T1S11.png)
+ 
+1. On the **Experiment designer** page select **+ Add action (1)** and choose **Add fault (2)**.
+
+   ![](../media/Ex6-T2-S7.3.png)
+ 
+1. On the **Add fault** page, select the following and select **Next: Target resources>** **(4)**.
+   
+   - Faults: **AKS Chaos Mesh Pods Chaos** ***(1)***
+   - Duration (minutes): **5** ***(2)***
+   - jsonSpec: Leave it to default ***(3)***
+     
+     ![](../media/2dgn61.png)
+     
+1. On **Target resources**, select **Manually select from a list** **(1)** option under the **Select target resources** , select the **contoso-traders-aks<inject key="DeploymentID" enableCopy="false" />** ***(2)*** resource, and **Add** ***(3)***.
+  
+   ![](../media/ex6-task3-step14.png)
+  
+1. Click on **Review + create**.
+  
+   ![](../media/upd-review.png)
+   
+1. On the **Review + create** page, click on **Create**.
+    
+1. Navigate back to the **contoso-traders-aks<inject key="DeploymentID" enableCopy="false" />** container instance and select **Access control (IAM) (1)**, click on **+ Add (2)**, and select **Add role assignment (3)**. 
+  
+   ![](../media/2dgn121.png)
+  
+1. In the **Add role assignment** page, under the **Role** tab, select **Privileged administrator roles**. Select **Owner (1)** and then **Next (2)**.
+  
+   ![](../media/ex6-task3-step18.png)
+  
+1. Next, on the **Members** tab, select **Managed identity (1)**  for **Assign access to** , click on **+ Select members (2)**  on the **Select managed identities** choose **Chaos Experiment (3)** for **Managed identity**, select the experiment **contoso-chaos-<inject key="DeploymentID" enableCopy="false" /> (4)**, click on **Select (5)**, and click on **Next** **(6)**.  
+   
+   ![](../media/ex6-task3-step19.png)
+  
+1. Next, on the **Conditions** tab, select **What user can do** as **Allow user to assign all roles** **(1)** and click on **Review + assign** **(2)**.
+
+   ![](../media/dev-9.png)
+
+1. Click on **Review + assign**. 
+   
+   ![](../media/ex6-ch.png)
+      
+1. On the Azure Portal, navigate back to the Chaos experiment you created, **contoso-chaos-<inject key="DeploymentID" enableCopy="false" />** and click on **Start**.
+  
+   ![](../media/2dgn108.png)
+ 
+1. Select **Ok** to **Start this experiment** pop-up.
+
+    ![](../media/Ex6-T2-S17.1.png)
+       
+1. Once the experiment status is **Success** click on **Details** to view the run preview.
+ 
+   ![](../media/2dgn109.png)
+ 
+1. On the **Details** preview page, select **Action (1)** and view the complete details of the run on **Fault details** under **Successful targets (2)**.
+ 
+   ![](../media/2dgn110.png)
+
+## Success criteria:
+To complete this challenge successfully:
+
+   - Completion of Load Test and Results Analysis: Azure Load Testing is configured, the test runs successfully, and Client-side metrics are reviewed, providing insights into performance under load.
+   - Execution of Chaos Experiment: A Chaos Experiment in Azure Chaos Studio is configured with the specified faults, executed successfully, and results are reviewed to confirm resilience.
+
+## Additional Resources:
+
+- Refer to [Continuous validation with Azure Load Testing and Azure Chaos Studio](https://learn.microsoft.com/en-us/azure/architecture/guide/testing/mission-critical-deployment-testing) for reference.
+- [What is Azure Chaos Studio?](https://learn.microsoft.com/en-us/azure/chaos-studio/chaos-studio-overview).
+- [Load test a website by using a JMeter script in Azure Load Testing](https://learn.microsoft.com/en-us/azure/load-testing/how-to-create-and-run-load-test-with-jmeter-script?tabs=portal).
+- [Intro to Chaos Engineering and Azure Chaos Studio](https://pdtit.medium.com/intro-to-chaos-engineering-and-azure-chaos-studio-preview-5e85fff10642).
+
+# Challenge 07: DevSecOps with AI-Powered GitHub Actions
+
+## Introduction
+
+Contoso Traders, an e-commerce platform, is committed to delivering secure and efficient software solutions. In this challenge, as a Lead DevSecOps engineer, your focus is to enhance the DevSecOps workflow by leveraging AI-driven GitHub Actions that focus on code review and security checks for pull requests thus leading to improved code quality and enhanced security practices in the development lifecycle.
+
+You need to focus on completing the implementation of the below-mentioned GitHub Actions:
+
+**AI Code Review Action**: AI Code Reviewer is a GitHub Action that leverages OpenAI's GPT-4 API to provide intelligent feedback and suggestions on your pull requests.
+**AI Security Check for Pull Request**: This GitHub Action uses OpenAI's GPT to analyse code in pull requests and identify potential security and privacy vulnerabilities and comment to the pull request with the findings.
+
+Here is the solution guide, which provides all the specific, step-by-step directions needed to do the task.
+
+## Accessing GitHub
+
+1. To access and log into GitHub, open the edge browser from inside the environment and navigate to **[GitHub](https://github.com/)**.
+
+2. Sign in to GitHub by clicking on the **Sign in** button in the top right corner of the GitHub home page.
+
+3. On the **Sign into GitHub tab**, you will see a login screen. Enter the following email/username, and then click on **Next**.
+
+   - **Email/Username:** <inject key="GitHubUsername"></inject>
+
+4. Now enter the following password and click on **Sign in**.
+
+   - **Password:** <inject key="GitHubPassword"></inject>
+
+## Solution Guide
+
+## Exercise 1: Configure and implement AI Code Review GitHub Action
+
+### Task 1: Sign In/Sign Up to an OpenAI Account
+
+1. Navigate to the **[OpenAI](https://platform.openai.com/login?launch)** in order to login to **OpenAI Account.**
+   
+3. Within the **Welcome back** page,
+    - If you already have an OpenAI account pre-created, you can go ahead signing into OpenAI using the following sign-in options as shown in the below screenshot.
+
+      ![](../media/cl6-ex1-t1-s2-a.png)
+
+      >**Note:** Ensure that your OpenAI account has active credits for the generation and usage of API keys.
+
+    - After providing the user email and password, you will be prompted to select an access option. Choose **API** to proceed.
+
+      ![](../media/ex6-task1-0.1.png)
+      
+    - If you are new to OpenAI and do not have an account created, click on **Sign up** within the *Welcome back* page to create a new free-tier account. 
+
+      ![](../media/cl6-ex1-t1-s2-b.png)
+  
+    - After clicking Sign Up on the welcome page:
+
+        - Enter your email address – You can use your GitHub **Email address (1)** and click on **Continue (2)**.
+
+          ![](../media/ex6-task1-2.png)
+
+        - Enter your password – Use your GitHub **Password (1)** and click on **Continue (2).**
+     
+          ![](../media/ex6-task1-3.png)
+  
+          >**Note:** You can find the GitHub credentials from the Environment Details page of the integrated lab environment, navigate to License tab.
+  
+        - A page will appear with the message "Verify your email". open http://outlook.office.com/ in a private window, provide the Github username and password, open the email from OpenAI, and click the verification link inside to complete the setup process. 
+     
+          ![](../media/ex6-task1-3.1.png)
+  
+        - Navigate back to the login page provide Github username and password, You will be prompted to provide details like **Full Name** and **Date of Bith** then click on **Agree** this will navigate you the Open AI Platform.
+
+      >**Note:** Upon creation of a new OpenAI account, the free tier provides you with a $5 credit limit that expires within a period of 3 months from the day of account activation.
+
+### Task 2: Create an OpenAI secret key
+
+1. Once you have successfully logged into your OpenAI account, you will be auto-directed to the overview page of the OpenAI platform. If not, you can navigate to the OpenAI platform using the following link, **[OpenAI platform](https://platform.openai.com/docs/overview)**.
+
+1. Go to the profile icon in the top right corner and select **Your profile**.
+   
+    ![](../media/CH6T2S2.png)
+
+2. Hover your cursor over the left navigation toolbar to expand the pane and click on **API keys**.
+
+    ![](../media/ex6-apikeys.png)
+
+3. In order to create **API key**, its required to Verify it with your phone number.Click on **Start verification.**
+
+   ![](../media/ex6-task1-4.png)
+
+4. Provide your Phone Number and click on **Send code.**
+
+   ![](../media/ex6-phoneno.png)
+
+5. Enter the Verification code that has been sent to the Phone number.
+
+   ![](../media/ex6-code.png)
+
+8. On the **Create new secret key** pop-up, configure the following:
+   
+    - **Name:** `GitHub Action Key` **(1)**
+    - **Project:** Select **Default project (2)** from the drop down.
+    - **Permissions:** Select `All` **(3)**
+    - Click on **Create secret key (4)**
+
+      ![](../media/ex6-task1-5.png)
+
+10. Upon creation of a new secret, save your key by clicking on the **Copy** button and pasting it on your notepad for a handy access.
+
+    **Note:** For safety reasons, **you won't be able to view the secret value again** once the **Save your key** page is closed.
+
+    ![](../media/cl6-ex1-t2-s5.png)
+
+11. You will now notice that the new API key, `GitHub Action Key` now appears in the list of **API keys**.
+
+    ![](../media/ex6-task1-7.png)
+
+### Task 3: Create a new GitHub repository secret
+
+1. Sign in to GitHub using the credentials provided in the environment detail tab of the integrated lab environment or via the credentials provided at the beginning of this solution guide.
+
+2. Select the `devsecops` repository that was created as a part of the earlier challenges.
+
+3. Under **Settings (1)**, expand **Secrets and variables** **(2)** under **security** by clicking the drop-down and select **Actions** **(3)** blade from the left navigation bar. Select the **New repository secret** **(4)** button.
+
+   ![](../media/ex6-task1-8.png)
+
+4. Under the **Actions Secrets/New secret** page, enter the below-mentioned details and click on **Add secret** **(3)**.
+
+   - **Name** : Enter **OPENAI_API_KEY** **(1)**
+   - **Value**: Paste the OpenAI secret value that was copied earlier over to the notepad **(2)**.
+
+     ![](../media/cl6-ex1-t3-s4.png)
+
+### Task 4: Configure the AI Code Review GitHub Action
+
+1. Open a new tab and paste the below URL which will Navigate to the following repo and fork it.
+
+   ```
+   https://github.com/freeedcom/ai-codereviewer
+   ```
+
+   ![](../media/ex6-task1-forkrepo.png)
+  
+1. Click on **Fork (1)** and then select **Create a new fork (2).**
+
+   ![](../media/ex6-task1-9.png)
+
+1. Uncheck **Copy the main branch only (1)** and click on **Create fork (2)**
+
+   ![](../media/ex6-task1-10.png)
+   
+1. Click on **Settings** **(1)**, rename the repo name to **ai-code-reviewer** **(2)** and click on **Rename** **(3)** button. 
+
+   ![](../media1/edit-ai-code.png)
+
+1. Navigate back to the `devsecops` repository that was created as a part of the earlier challenges.
+
+   ![](../media/ex6-task1-11.png)
+
+3. Select the **Actions (1)** tab from your repository home page and then click on **New Workflow (2)**.
+
+   ![](../media/cl9-t2-s3.png)
+
+4. On the Get Started with GitHub Actions page, select **set up a workflow yourself**.
+
+   ![](../media/cl9-t2-s4.png)
+
+5. In the text box, enter the name `ai-code-review.yml` for your workflow file.
+
+   ![](../media/cl6-ex1-t4-s4.png)
+
+6. Copy and paste the following action workflow into the Edit New file tab:
+
+    ```
+    name: AI Code Reviewer
+    
+    on:
+      pull_request:
+        types:
+          - opened
+          - synchronize
+    permissions: write-all
+    jobs:
+      review:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout Repo
+            uses: actions/checkout@v3
+    
+          - name: AI Code Reviewer
+            uses: your-username/ai-code-reviewer@main
+            with:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # The GITHUB_TOKEN is there by default so you just need to keep it like it is and not necessarily need to add it as secret as it will throw an error. [More Details](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret)
+              OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+              OPENAI_API_MODEL: "gpt-3.5"
+              exclude: "**/*.json, **/*.md" # Optional: exclude patterns separated by commas
+    ```
+
+7. Rename `your-username` with a GitHub **username (1)** and Commit the changes made to create the workflow file by clicking on **Commit changes (2)**.
+
+   ![](../media1/ai-code-edit.png)
+
+8. Click on **Commit changes**.
+
+   ![](../media/ex-common.png)
+
+### Task 5: Create a pull request to initiate workflow
+
+1. To create a new branch, click on the **Switch branch (1)** dropdown menu and click on **View all branches (2)**.
+  
+   ![](../media/cl6-ex1-t5-s1.png)
+
+2. Click on **New branch** within the **Branches** page.
+
+   ![](../media/cl6-ex1-t5-s2.png)
+
+3. Within the **Create a branch** pop-up, enter the following:
+   - **New branch name:** Test **(1)**
+   - **Source:** Select `main` **(2)**.
+   - Click on **Create new branch (3)**
+
+     ![](../media/ex6-task1-12.png)
+
+4. Navigate to the newly created `Test` branch.
+
+   ![](../media/ex6-task1-13.png)
+
+6. Select **.github (1)**, expand **workflows (2)** click on **ai-code-review.yml (3)**.
+
+    ![](../media/ex6-task1-14.png)
+
+1. on the `ai-code-review.yml` file click on **pencil icon** at the top right corner in order to edit the file.
+
+   ![](../media/ex6-task1-17.png)
+
+8. At the end of the line add a **space** or click on **enter** and click on **Commit changes.**
+
+   ![](../media/ex6-task1-15.png)
+
+1. Click on **Commit changes.**
+
+   ![](../media/ex6-task1-16.png)
+
+10. To Create a Pull request to merge the changes made from the `test` to  `main` branch. Click on **Pull requests**
+
+    ![](../media/ex6-task1-18.png)
+
+1. Click on **New pull request.**
+
+   ![](../media/ex6-task1-19.png)
+
+1. Here at the Comparing changes page, make sure you have selected **main (1)** for the base and **Test (2)** for compare , Then click on **Create pull request (3).**
+
+   ![](../media/ex6-task1-20.png)
+
+1. Click on the **Actions** tab and then notice that `AI Code Reviewer` workflow has been automatically initiated. Ensure that the workflow does not fail. If so, there may be some vulnerabilities in the code within the recent pull request.  
+
+   ![](../media/ex6-task1-22.png)
+
+## Exercise 2: Configure and implement AI Security Check for Pull Requests
+
+### Task 1: Create a new GitHub repository secret
+
+1. Sign in to GitHub using the credentials provided in the environment detail tab of the integrated lab environment or via the credentials provided at the beginning of this solution guide.
+
+2. Select the `devsecops` repository that was created as a part of the earlier challenges.
+
+3. Under **Security (1)**, expand **Secrets and variables** **(2)** by clicking the drop-down and select **Actions** **(3)** blade from the left navigation bar. Select the **New repository secret** **(4)** button.
+
+   ![](../media/ex6-task1-23.png)
+
+4. Under the **Actions Secrets/New secret** page, enter the below-mentioned details and click on **Add secret** **(3)**.
+
+   - **Name** : Enter **OPENAI_TOKEN** **(1)**
+   - **Value** : Paste the OpenAI secret value that was created and copied over to the notepad in the previous exercise. **(2)**.
+
+     ![](../media/ex6-task1-24.png)
+
+### Task 2: Configure GitHub Action
+
+1. Login to GitHub and select the `devsecops` repository that was created as a part of the earlier challenges.
+
+2. Select the **Actions (1)** tab from your repository home page and then click on **New Workflow (2)**.
+
+   ![](../media/cl9-t2-s3.png)
+
+3. On the Get Started with GitHub Actions page, select **set up a workflow yourself**.
+
+   ![](../media/cl9-t2-s4.png)
+
+4. In the text box, enter the name `ai-security-check-for-pr.yml` for your workflow file.
+
+   ![](../media/cl6-ex2-t2-s5.png)
+
+5. Copy and paste the following action workflow into the Edit new file tab:
+
+   ```
+   name: AI Security Check for Pull Requests
+   
+   on:
+     pull_request:
+       branches:
+         - main
+   
+   jobs:
+     ai_security_check_for_pull_requests:
+       runs-on: ubuntu-latest
+   
+       steps:
+         - name: Check out repository
+           uses: actions/checkout@v2
+   
+         - name: Set up Node.js
+           uses: actions/setup-node@v2
+           with:
+             node-version: 16
+   
+         - name: Install dependencies
+           run: npm ci
+   
+         - name: Finding security and privacy code vulnerabilities
+           id: ai_security_check
+           uses: obetomuniz/ai-security-check-for-pull-requests-action@v1.0.0
+           env:
+             GH_TOKEN: ${{ secrets.GH_TOKEN }}
+             GH_REPOSITORY: ${{ github.repository }}
+             GH_EVENT_PULL_REQUEST_NUMBER: ${{ github.event.number }}
+             OPENAI_TOKEN: ${{ secrets.OPENAI_TOKEN }}
+   
+         - name: Comment on pull request
+           uses: actions/github-script@v6
+           env:
+             PR_COMMENT: ${{ steps.ai_security_check.outputs.pr_comment }}
+           with:
+             github-token: ${{ secrets.GH_TOKEN }}
+             script: |
+               const prComment = process.env.PR_COMMENT || "No security or privacy issues found.";
+               const { data } = await github.rest.issues.createComment({
+                 issue_number: context.issue.number,
+                 owner: context.repo.owner,
+                 repo: context.repo.repo,
+                 body: prComment
+               });
+   ```
+
+6. Commit the changes made to create the workflow file.
+
+   ![](../media/ex6-task1-cm.png)
+
+7. Click on **Commit changes**.
+
+   ![](../media/ex6-cm1.png)
+
+8. Navigate back to the **Test** branch that you created.
+
+    ![](../media/ex6-task1-25.png)
+
+9. Select the **.github/workflows** folder and click on **ai-code-review.yml**.
+
+10. At the end of the line, add a **space** or press **Enter** to make a change.
+
+11. Create a Pull Request to merge the changes from the **Test** branch to the **Main** branch.
+
+12. Click on the **Actions** tab and then notice that **AI Security Check for Pull Requests** workflow has been automatically initiated. Ensure that the workflow does not fail. If so, there may be some vulnerabilities within the recent pull request. Refer to the run details for the GitHub Actions that have failed.
+
+    ![](../media/ex6-task1-26.png)
+
+## Success criteria:
+To complete this challenge successfully:
+
+- Successful implementation of the `AI Code Review Action` and generation of of review comments based on the AI's response and added to the pull request.
+- Successful implementation of the `AI Security Check for Pull Requests` and generation of comments to the pull requests based on AI's analysis of the code.
+
+## Additional Resources:
+
+- Refer to [Overview of Microsoft Defender for Cloud devsecops Security](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devsecops-introduction) for reference.
+- Refer to [Configure the Microsoft Security devsecops GitHub action](https://learn.microsoft.com/en-us/azure/defender-for-cloud/github-action) for reference.
+- Refer to [Connect your GitHub Environment to Microsoft Defender for Cloud](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github) for reference.
+
+# Challenge 08: Security Compliance as Code
+
+## Introduction
+
+In this challenge, you are a DevOps engineer responsible for ensuring the security compliance of your organization's Azure resources. Your task is to implement and enforce security policies using Azure Policy over the Azure resources and integrate compliance scanning into the GitHub CI/CD pipelines for your Azure projects.
+
+This is the solution guide, which provides all the specific, step-by-step directions needed to do the task.
+
+## Solution Guide
+
+## Exercise 1: Implement Security Policies using Azure Policy
+
+### Task 1: Assign a Built-In policy
+
+In this task, you will enforce compliance with Azure Policy by assigning a policy definition. A policy definition defines under what condition a policy is enforced and what effect to take. In this solution, you will assign the built-in policy definition called **Inherit a tag from the resource group if missing** to add the specified tag with its value from the parent resource group to new or updated resources missing the tag and then implement a new custom policy for the resources that have been deployed with the specific region.
+
+1. Go to the Azure portal to assign policies. Search for and select **Policy**.
+
+   ![](../media/cl8-ex1-t1-s1.png)
+
+2. Expand **Authoring (1)** and Select **Assignments (2)** on the left side of the Azure Policy page. An assignment is a policy that has been assigned to take place within a specific scope.
+
+   ![](../media/ex8-task1-1.png)
+
+3. Select **Assign Policy** from the top of the **Policy | Assignments** page.
+
+   ![](../media/ex8-task1-2.png)
+
+4. On the **Assign Policy** page and **Basics** tab, perform the following steps:
+   
+   - Select the **Scope** by selecting the ellipsis and selecting either a management group or subscription **(1)**. Optionally, select a **Resource Group (2)**. A scope determines what resources or grouping of resources the policy assignment gets enforced on.
+   - Click on **Select (3)** at the bottom of the Scope pane.
+
+     ![](../media/ex8-task1-3.png)
+
+6. Resources can be excluded based on the **Scope**. **Exclusions** start at one level lower than the level of the **Scope**. **Exclusions** are optional, so leave it blank for now.
+
+7. Select the **Policy definition** ellipsis to open the list of available definitions. You can filter the policy definition Type to Built-in to view all and read their descriptions.
+
+   ![](../media/ex8.png)
+
+8. Select **Inherit a tag from the resource group if missing**. If you can't find it right away, type **Inherit a tag from the resource group if missing (1)** into the search box and then press ENTER. Select the Policy result fetched **Inherit a tag from the resource group if missing (2)** and then Click on **Add (3)** at the bottom of the **Available Definitions** page once you have found and selected the policy definition.
+
+   ![](../media/ex8-task1-5.png)
+
+9. The **Assignment name (1)** is automatically populated with the policy name you selected, but you can change it. For this example, leave **Inherit a tag from the resource group if missing**. You can also add an optional **Description (2)**. The description provides details about this policy assignment.
+
+10. Leave **Policy enforcement** as **Enabled (3)**. When Disabled, this setting allows testing the outcome of the policy without triggering the effect.
+
+    ![](../media/ex8-task1-10.png)
+   
+12. Select the **Parameters (1)** tab at the top of the wizard.
+
+13. For **Tag Name**, enter **Environment (2)**.
+
+    ![](../media/ex8-task1-6.png)
+
+15. Select the **Remediation (1)** tab at the top of the wizard.
+
+16. Leave **Create a remediation task (2)** unchecked. This box allows you to create a task to alter existing resources in addition to new or updated resources.
+
+17. **Create a Managed Identity (3)** is automatically checked since this policy definition uses the modify effect. **Permissions** is set to Contributor automatically based on the policy definition.
+
+    ![](../media/ex8-task1-7.png)
+     
+18. Select the **Non-compliance messages (1)** tab at the top of the wizard.
+
+19. Set the **Non-compliance message** to **This resource doesn't have the required tag (2)**. This custom message is displayed when a resource is denied or for non-compliant resources during regular evaluation.
+
+    ![](../media/ex8-task1-8.png)
+
+21. Select the **Review + create (1)** tab at the top of the wizard.
+
+22. Review your selections, then select **Create (2)** at the bottom of the page.
+
+    ![](../media/ex8-task1-9.png)
+
+### Task 2: Implement a new custom policy
+
+Now that you've assigned a built-in policy definition, you can do more with Azure Policy. Azure Policy enables organizations to enforce governance controls and compliance standards. This guide focuses on implementing a custom policy to restrict resource deployments to the East US region within a designated resource group. By leveraging Azure Policy, organizations can ensure compliance, mitigate risks, and streamline resource management effectively.
+
+1. Select **Definitions (1)** under **Authoring** in the left side of the Azure Policy page. Then click on ****+ Policy definition (2)** at the top of the page.
+
+   ![](../media/ex8-task1-11.png)
+
+1.  This button opens to the **Policy definition** page and enter the following information:
+      - Select the **Definition location** **(1)** by selecting the ellipsis and select the Subscription and click on **Select**. A scope determines what resources or grouping of resources the policy assignment gets enforced on.
+      - **Name:** Restrict deployment to East US region **(2)**
+      - **Description:** This policy ensures that resources are deployed only in the East US region. **(3)**
+      - **Category:** Create a new catrgory named **Region**.  **(4)**
+
+        ![](../media/ex8-task1-12.png)
+
+1. Copy the following JSON code and then update it for your needs with:
+
+   - The policy parameters.
+   - The policy rules/conditions, in this case - location set to East US.
+   - The policy effect, in this case - **Deny**.
+
+   ```
+   {
+       "policyRule": {
+          "if": {
+            "not": {
+              "field": "location",
+              "in": ["eastus"]
+            }
+          },
+          "then": {
+            "effect": "deny"
+          }
+        }
+   }
+   ```
+
+   >**Note:** The **field** property in the policy rule must be a supported value. An example of alias might be `Microsoft.Compute/VirtualMachines/Size` and `Microsoft.Resources/resourceGroups/location`.
+
+1. Once the JSON code is updated. Click on **Save.**
+
+   ![](../media/ex8-0.1.png)
+
+1. This will navigate you to the **Restrict deployment to East US region** Page.
+  
+   >Note: If you are not on the **Restrict deployment to East US region** Page perform Step 6 and Step 7
+
+   ![](../media/ex8-task1-14.png)
+
+1. Select **Policy | Definitions** from the top of the Azure Policy page.
+
+1. In the **Policy | Definition** search bar Search **Restrict deployment to East US region (1)** and select for **Restrict deployment to East US region (2)**. 
+
+   ![](../media1/Ch8E1T2S7-3101.png)
+
+1. In **Restrict deployment to East US region** page, click on **Assign policy**. 
+
+   ![](../media1/assign-custom-policy.png)
+
+1. In the **Basics** page of Restrict deployment to East US region, **Exclusions** start at one level lower than the level of the **Scope**. **Exclusions** are optional, so you can leave it blank for now. click on **Review + Create** followed by **Create**.   
+
+   ![](../media1/custom-policy-basic.png)
+
+## Exercise 2: Integrate Compliance Scanning in CI/CD pipeline
+
+### Task 1: Create a GitHub Secret
+
+1. Navigate back to the `devsecops` repository to create GitHub secrets, in your GitHub lab files repository, and click on the **Settings** tab.
+
+      ![](../media/cl1-t2-s2.png)
+
+2. Navigate to **Environment Details** **(1)** tab of the integrated lab environment, click on **Service Principal Details** **(2)**, and copy the **Subscription ID**, **Tenant ID (Directory ID)**, **Application ID (Client ID)**, and **Secret Key (Client Secret)**.
+
+      ![](../media1/Ch8E2T1S2-3101.png)
+   
+      - Replace the values that you copied in the below JSON. You will be using them in this step.
+      
+      ```json
+      {
+        "clientId": "your-client-id",
+        "clientSecret": "your-client-secret",
+        "tenantId": "your-tenant-id",
+        "subscriptionId": "your-subscription-id",
+        "resourceGroup": "your-resource-group"
+      }
+      ```
+
+   >**Note:** Also ensure to replace `your-subscription-id` and `your-resource-group` within any of the available resources group name with the above secret.
+
+3. Within GitHub, under **Settings (1)**, expand **Secrets and variables** **(2)** by clicking the drop-down and select **Actions** **(3)** blade from the left navigation bar. Select the **New repository secret** **(4)** button.
+
+   ![](../media/ex8-task1-15.png)
+
+4. Under the **Actions Secrets/New secret** page, enter the below-mentioned details and click on **Add secret** **(3)**.
+
+   - **Name** : Enter **AZURE_CREDENTIALS** **(1)**
+   - **Secret** : Paste the service principal details in JSON format **(2)**
+   - Click on **Add Secret (3)**
+   
+     ![](../media1/azure-cred.png)
+
+### Task 2: Implement Azure Policy Compliance Scan
+
+1. In a new browser tab, open ```https://www.github.com/login```. From the **Environment Details** page **(1)**, navigate to **License** **(2)** tab and **copy** **(3)** the credentials. Use the same username and password to log into GitHub.
+
+   ![](../media/dev2.png) 
+
+2. Once logged-in, on the upper-right corner, expand the user **drop-down menu** **(1)** and select **Your repositories** **(2)**.
+
+   ![The `New Repository` creation form in GitHub.](../media/2dg1.png "New Repository Creation Form")
+
+3. Select the repository that you created earlier named, `devsecops`.
+
+   ![](../media/cl7-ex3-t1-s3.png)
+
+4. Within a new browser tab, navigate to `https://github.com/marketplace/actions/azure-policy-compliance-scan` to view the **Azure Policy Compliance Scan** GitHub Action.
+
+5. Go back to your `devsecops` GitHub repository.
+
+6. Navigate to `.github/workflows` directory and click on **Create a new file.**.
+
+   ![](../media/ex8-task1-16.png)
+
+1. Create a new file named `complaince-scan.yml`
+
+   ![](../media/ex8-task1-16.1.png)
+
+8. Paste the following code within the workflow file. The below workflow will trigger a policy compliance scan on the resource group. After the scan is complete, it will fetch the compliance state of resources. The action will fail if there are any non-compliant resources.
+
+   ```
+   # File: .github/workflows/workflow.yml
+
+   on: push
+   
+   jobs:
+     assess-policy-compliance:    
+       runs-on: ubuntu-latest
+       steps:
+       # Azure Login       
+       - name: Login to Azure
+         uses: azure/login@v1
+         with:
+           creds: ${{secrets.AZURE_CREDENTIALS}} 
+       
+       - name: Check for resource compliance
+         uses: azure/policy-compliance-scan@v0
+         with:
+           scopes: |
+             /subscriptions/<Subscription ID>/resourceGroups/<resource-group-name>               
+           scopes-ignore: |
+             /subscriptions/<Subscription ID>/resourceGroups/<resource-group-name>/providers/microsoft.authorization
+        
+   ```
+
+   >**Note:** Ensure to Replace the `<Subscription ID>` , `<resource-group-name>` in the above code.
+
+9. To Commit the changes within your repository to successfully create the workflow file. Click on **Commit changes.**
+
+    ![](../media/dev-7.png)
+
+10. Click on **Commit changes**
+
+    ![](../media/ex8-task1-19.png)
+
+11. Head back to the GitHub **Actions (1)** tab and then make sure that the Action named **Compliance Scan (2)** run successfully.
+
+    ![](../media/dev-8.png)
+
+## Success criteria:
+To complete this challenge successfully:
+
+- Successful effectiveness of policies in enforcing security compliance.
+- Successful integration of compliance scanning into the pipeline.
+- Successful setup and execution of the CI/CD pipeline.
+
+## Additional Resources:
+
+- Refer to [Overview of Azure Policy](https://learn.microsoft.com/en-us/azure/governance/policy/overview) for reference.
+- Refer to [Azure Policy Compliance Scan](https://github.com/marketplace/actions/azure-policy-compliance-scan) for reference.
+
+# Challenge 09: Implement Microsoft Defender for Cloud DevOps Security 
+
+## Introduction
+
+Contoso Traders, an e-commerce platform, is committed to delivering secure and efficient software solutions. In this challenge, as a DevSecOps engineer, you are responsible for ensuring the security of your applications throughout the development lifecycle. Your organization has recently adopted Microsoft Defender for Cloud to enhance the security posture of your DevOps pipelines.
+
+Your task is to implement Microsoft Defender for Cloud DevOps security measures by configuring the necessary GitHub actions within your created GitHub repository, viewing the scanned results, and connecting your GitHub environment to Microsoft Defender for Cloud.
+
+This is the solution guide, which provides all the specific, step-by-step directions needed to do the task.
+
+## Solution Guide
+
+### Accessing the Azure Portal
+
+1. To access the Azure Portal, open the Edge browser from inside the environment and navigate to the **[Azure Portal](https://portal.azure.com)**.
+
+1. On the **Sign in to Microsoft Azure** tab, you will see a login screen. Enter the following email/username, and then click on **Next**. 
+   * **Email/Username**: <inject key="AzureAdUserEmail"></inject>
+        
+1. Now enter the following password and click on **Sign in**.
+   * **Password**: <inject key="AzureAdUserPassword"></inject>
+     
+1. If you see the pop-up **Stay Signed in?**, click No.
+
+1. If you see the pop-up **You have free Azure Advisor recommendations!**, close the window to continue the lab.
+
+1. If a **Welcome to Microsoft Azure** pop-up window appears, click **Cancel** to skip the tour.
+
+## Task 1: Connect GitHub Environment to Microsoft Defender for Cloud
+
+In this task, you will connect your GitHub organizations on the **Environment settings** page in Microsoft Defender for Cloud. This page provides a simple onboarding experience to auto-discover your GitHub repositories. By connecting your GitHub organizations to Defender for Cloud, you extend the security capabilities of Defender for Cloud to your GitHub resources.
+
+   - **Foundational Cloud Security Posture Management (CSPM) features**: You can assess your GitHub security posture through GitHub-specific security recommendations.
+
+   - Defender CSPM features: Defender CSPM customers receive code to cloud contextualized attack paths, risk assessments, and insights to identify the most critical weaknesses that attackers can use to breach their environment. Connecting your GitHub repositories will allow you to contextualize DevOps security findings with your cloud workloads and identify the origin and developer for timely remediation.
+
+1. From the Azure Portal Dashboard, search for and select **Microsoft Defender for Cloud**.
+
+   ![](../media/cl9-t1-s1.png)
+
+1. In the left pane , expand **Management (1)**  and then select **Environment settings (2).**
+
+   ![](../media/ex9-1.png)
+
+3. To add a new environment, perform the following steps:
+   
+    - In the **Microsoft Defender for Cloud | Environment settings** page, click on **+ Add environment (1)**.
+    - Select **GitHub (2)** from the list of options.
+  
+      ![](../media/ex9-2.png)
+
+5. Within the **GitHub Connection** page, enter the following details:
+   
+    - **Connector name:**  GitHub-Connector **(1)**
+    - **Subscription:** Select the existing subscription from the list **(2)**.
+    - **Resource group:** Select the resource group over which you would want to implement the GitHub connection **(3)**.
+    
+      >**Note:** The subscription/resource group is the location where Defender for Cloud creates and stores the GitHub connection.
+  
+    - **Location:** Same location as that of the selected resource group **(4)**.
+    - Click on **Next: Configure access > (5)**.
+  
+      ![](../media1/cl9-t1-s3.png)
+
+7. Within the **Configure access** tab, click on **Authorize** to give permissions to the DevOps security app to access your resources.
+
+   ![](../media1/cl9-t1-s5.png)
+
+8. Authorize the permission needed by clicking on **Authorize Microsoft Security DevOps** within the pop-up and ensure that the authorization is successful.
+
+   ![](../media/cl9-t1-s6.png)
+
+   ![](../media1/cl9-t1-s6-b.png)
+
+    >**Note:** After authorization, if you wait too long to install the DevOps security GitHub application, the session will time out and you'll get an error message.
+
+9. Select **Install** to install the DevOps security app on your repository/repositories.
+
+   ![](../media1/cl9-t1-s7.png)
+
+1. You will be prompted to select you GitHub account.
+
+    ![](../media/ex9-3.png)
+
+1. Click on **Install**.
+
+   ![](../media/ex9-4.png)
+   
+1. Ensure that it has been installed successfully.
+
+   ![](../media1/cl9-t1-s8.png)
+
+11. For **Edit connector account**, select one of the following:
+    -  Select **All existing and future organizations (1)** to auto-discover all repositories in GitHub organizations where the DevOps security GitHub application is installed.
+    -  Click on **Next: Review and generate > (2)**.
+  
+    >**Note:** The **All existing and future organizations** option is used to auto-discover all repositories in GitHub organizations where the DevOps security GitHub application is installed and future organizations where the DevOps security GitHub application is installed.
+
+      ![](../media/ex9-8.png)
+
+11. On the **Review and generate** tab, click on **Create** to successfully create the GitHub connection.
+
+12. When the process finishes, the GitHub connector appears on your **Environment settings** page.
+
+    ![](../media/ex9-7.png)
+
+>**Note:** The Defender for Cloud service automatically discovers the organizations where you installed the DevOps security GitHub application.
+
+### Task 2: Configure the Microsoft Security DevOps GitHub Action
+
+Microsoft Security DevOps is a command line application that integrates static analysis tools into the development lifecycle. Security DevOps installs, configures, and runs the latest versions of static analysis tools such as, SDL, security and compliance tools. Security DevOps is data-driven with portable configurations that enable deterministic execution across multiple environments.
+
+1. Sign in to GitHub using the credentials provided in the environment detail tab of the integrated lab environment.
+
+2. Select the `devops` repository that was created as a part of the earlier challenges.
+
+3. Select the **Actions (1)** tab from your repository home page and then click on **New Workflow (2)**.
+
+   ![](../media/cl9-t2-s3.png)
+
+4. On the Get Started with GitHub Actions page, select **set up a workflow yourself**.
+
+   ![](../media/cl9-t2-s4.png)
+
+5. In the text box, enter the name `msdevopssec.yml` for your workflow file.
+
+   ![](../media/cl9-t2-s5.png)
+
+6. Copy and paste the following action workflow into the Edit new file tab:
+
+    ```
+    name: MSDO windows-latest
+    on:
+      push:
+        branches:
+          - main
+    
+    jobs:
+      sample:
+        name: Microsoft Security DevOps Analysis
+    
+        # MSDO runs on windows-latest.
+        # ubuntu-latest also supported
+        runs-on: windows-latest
+    
+        steps:
+    
+          # Checkout your code repository to scan
+        - uses: actions/checkout@v3
+    
+          # Run analyzers
+        - name: Run Microsoft Security DevOps Analysis
+          uses: microsoft/security-devops-action@latest
+          id: msdo
+          with:
+          # config: string. Optional. A file path to an MSDO configuration file ('*.gdnconfig').
+          # policy: 'GitHub' | 'microsoft' | 'none'. Optional. The name of a well-known Microsoft policy. If no configuration file or list of tools is provided, the policy may instruct MSDO which tools to run. Default: GitHub.
+          # categories: string. Optional. A comma-separated list of analyzer categories to run. Values: 'secrets', 'code', 'artifacts', 'IaC', 'containers. Example: 'IaC,secrets'. Defaults to all.
+          # languages: string. Optional. A comma-separated list of languages to analyze. Example: 'javascript,typescript'. Defaults to all.
+          # tools: string. Optional. A comma-separated list of analyzer tools to run. Values: 'bandit', 'binskim', 'eslint', 'templateanalyzer', 'terrascan', 'trivy'.
+    
+          # Upload alerts to the Security tab
+        - name: Upload alerts to Security tab
+          uses: github/codeql-action/upload-sarif@v2
+          with:
+            sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+    
+          # Upload alerts file as a workflow artifact
+        - name: Upload alerts file as a workflow artifact
+          uses: actions/upload-artifact@v3
+          with:  
+            name: alerts
+            path: ${{ steps.msdo.outputs.sarifFile }}
+    ```
+
+7. Select **Commit changes**.
+
+   ![](../media/ex9-5.png)
+
+8. Click on **Commit changes**.
+
+   ![](../media/ex9-6.png)
+
+9. Select **Actions** and verify the new action is running.
+
+   ![](../media/cl9-t2-s9.png)
+
+### Task 3: Investigate and Remediate
+
+1. Sign in to GitHub where the `devsecops` repository was created. 
+
+2. Click on the **Security (1)** tab from your repository overview page and then select **Code scanning (2)** under *Vulnerability alerts*.
+
+   ![](../media/cl9-t3-s2.png)
+
+3. From the dropdown menu, select **Filter by tool**.
+
+  >**Note:** Code scanning findings will be filtered by specific MSDO tools in GitHub. These code scanning results are also pulled into Defender for Cloud recommendations.
+
+## Success criteria:
+To complete this challenge successfully:
+
+- Appropriate integration and configuration of Microsoft Security DevOps GitHub Action.
+- Successful connection of GitHub environment to Microsoft Defender for Cloud.
+
+## Additional Resources:
+
+- Refer to [Overview of Microsoft Defender for Cloud DevOps Security](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-devops-introduction) for reference.
+- Refer to [Configure the Microsoft Security DevOps GitHub action](https://learn.microsoft.com/en-us/azure/defender-for-cloud/github-action) for reference.
+- Refer to [Connect your GitHub Environment to Microsoft Defender for Cloud](https://learn.microsoft.com/en-us/azure/defender-for-cloud/quickstart-onboard-github) for reference.
